@@ -1,0 +1,69 @@
+<div class="container">
+	<div class="row">
+		<div class="col-lg-6"></div>
+		<div class="col-lg-6">
+    	  <div class="input-group">
+    	  <input id="searchBox" type="text" class="form-control" placeholder="By user" aria-label="...">
+      	    <div class="input-group-btn">
+        		<button id="filterButton" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onkeypress="handle">By user <span class="caret"></span></button>
+        		<ul id="searchItems" class="dropdown-menu">
+        			<li id="userItem"><a href="#user">By user</a></li>
+		            <li id="wordItem"><a href="#word">By word</a></li>
+		            <li id="hashtagItem"><a href="#hashtags">By hashtag</a></li>
+		            <li id="linkItem"><a href="#links">By link</a></li>
+          			<li role="separator" class="divider"></li>
+          			<li><a href="#">Location</a></li>
+        		</ul>
+      		</div><!-- /btn-group -->
+    	   </div><!-- /input-group -->
+  		</div><!-- /.col-lg-6 -->
+    </div>
+
+    <br/>
+    <br/>
+    <div class="row">
+    	<div id="tweetsTableDiv" class="col-lg-12">
+    	<%= render partial: "tweets_table" , locals: {tweets: @tweets}%>
+    	</div>
+    </div>
+</div>
+<script type="text/javascript">
+	
+	$('#searchBox').bind('keyup', function(e){
+		if(e.keyCode === 13){
+			type_value = '';
+			param_value = $('#searchBox').val();
+			placeholder = $('#searchBox').attr('placeholder');
+			if(placeholder == 'By user')
+				type_value = 'user';
+			if(placeholder == 'By word')
+				type_value = 'tweets';
+			if(placeholder == 'By hashtag')
+				type_value = 'hashtags';
+			if(placeholder == 'By link')
+				type_value = 'links';
+			if(placeholder == 'Location')
+				type_value = 'near'
+			$.ajax({
+			type:"GET",
+			url: 'fetch_tweets',
+			data: {
+				type : type_value,
+				quote : param_value
+			},
+			success: function (data) {
+				
+			}	
+		});
+		}
+	});
+
+	$(document).ready(function(){
+		$('#searchItems li').on('click', function(){
+			$('#filterButton').text($(this).text());
+			$('#searchBox').val("");
+			$('#searchBox').attr('placeholder',$(this).text());
+		});
+	});
+
+</script>
